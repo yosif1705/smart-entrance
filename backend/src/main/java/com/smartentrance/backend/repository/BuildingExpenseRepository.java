@@ -22,4 +22,6 @@ public interface BuildingExpenseRepository extends JpaRepository<BuildingExpense
     List<Object[]> sumExpensesByMethod(@Param("buildingId") Integer buildingId);
 
     List<BuildingExpense> findAllByBuildingIdOrderByExpenseDateDesc(Integer buildingId);
+
+    boolean existsByDocumentUrl(String documentUrl);
 }
