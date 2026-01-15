@@ -9,13 +9,11 @@ import java.util.Optional;
 
 public interface DocumentRepository extends JpaRepository<BuildingDocument, Long> {
 
-    List<BuildingDocument> findAllByBuildingIdOrderByCreatedAtDesc(Integer buildingId);
-    List<BuildingDocument> findAllByBuildingIdAndTypeOrderByCreatedAtDesc(Integer buildingId, DocumentType type);
+    List<BuildingDocument> findAllByBuildings_IdOrderByCreatedAtDesc(Integer buildingId);
+    List<BuildingDocument> findAllByBuildings_IdAndTypeOrderByCreatedAtDesc(Integer buildingId, DocumentType type);
 
-    List<BuildingDocument> findAllByBuildingIdAndIsVisibleToResidentsTrueOrderByCreatedAtDesc(Integer buildingId);
-    List<BuildingDocument> findAllByBuildingIdAndTypeAndIsVisibleToResidentsTrueOrderByCreatedAtDesc(Integer buildingId, DocumentType type);
+    List<BuildingDocument> findAllByBuildings_IdAndIsVisibleToResidentsTrueOrderByCreatedAtDesc(Integer buildingId);
+    List<BuildingDocument> findAllByBuildings_IdAndTypeAndIsVisibleToResidentsTrueOrderByCreatedAtDesc(Integer buildingId, DocumentType type);
 
     Optional<BuildingDocument> findByFileUrl(String fileUrl);
-
-    List<BuildingDocument> findAllByBuildingIdAndType(Integer buildingId, DocumentType type);
 }

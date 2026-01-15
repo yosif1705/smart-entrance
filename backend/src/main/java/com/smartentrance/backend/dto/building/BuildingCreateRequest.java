@@ -8,9 +8,6 @@ public record BuildingCreateRequest(
         @NotBlank(message = "Address from Google is required")
         String address,
 
-        @NotBlank(message = "Google Place ID is required")
-        String googlePlaceId,
-
         @NotBlank(message = "Entrance is required")
         String entrance,
 

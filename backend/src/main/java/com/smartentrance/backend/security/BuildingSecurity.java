@@ -7,6 +7,7 @@ import com.smartentrance.backend.model.User;
 import com.smartentrance.backend.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -36,9 +37,11 @@ public class BuildingSecurity {
         return buildingRepository.existsByIdAndManagerId(buildingId, user.getId());
     }
 
+    @Transactional(readOnly = true)
     public boolean canManageDocument(Long documentId, User user) {
         return documentRepository.findById(documentId)
-                .map(doc -> isManager(doc.getBuilding().getId(), user))
+                .map(doc -> doc.getBuildings().stream()
+                        .anyMatch(building -> isManager(building.getId(), user)))
                 .orElse(false);
     }
 

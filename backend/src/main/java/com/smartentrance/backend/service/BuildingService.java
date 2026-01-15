@@ -36,7 +36,7 @@ public class BuildingService {
     @Transactional
     @PreAuthorize("isAuthenticated()")
     public BuildingResponse createBuildingWithSkeleton(BuildingCreateRequest request, User manager) {
-        if (buildingRepository.existsByGooglePlaceIdAndEntrance(request.googlePlaceId(), request.entrance().toUpperCase())) {
+        if (buildingRepository.existsByAddressAndEntrance(request.address(), request.entrance().toUpperCase())) {
             throw new EntityExistsException("This building entrance is already registered.");
         }
 
@@ -45,7 +45,6 @@ public class BuildingService {
         Building building = Building.builder()
                 .name(request.name())
                 .address(request.address())
-                .googlePlaceId(request.googlePlaceId())
                 .entrance(request.entrance().toUpperCase())
                 .totalUnits(request.totalUnits())
                 .manager(managerProxy)
@@ -80,7 +79,7 @@ public class BuildingService {
 
         if (req.protocolFileUrl() != null && !req.protocolFileUrl().isBlank()) {
             BuildingDocument doc = new BuildingDocument();
-            doc.setBuilding(building);
+            doc.getBuildings().add(building);
             doc.setUploadedBy(manager);
             doc.setTitle("Budget Protocol");
             doc.setDescription("Monthly budget protocol document.");

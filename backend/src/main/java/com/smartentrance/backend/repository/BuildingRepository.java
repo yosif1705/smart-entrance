@@ -15,7 +15,7 @@ import static org.hibernate.jpa.HibernateHints.HINT_FETCH_SIZE;
 @Repository
 public interface BuildingRepository extends JpaRepository<Building, Integer> {
 
-    boolean existsByGooglePlaceIdAndEntrance(String googlePlaceId, String entrance);
+    boolean existsByAddressAndEntrance(String address, String entrance);
 
     boolean existsByIdAndManagerId(Integer id, Integer managerId);
 

@@ -11,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "buildings", uniqueConstraints = {
-        @UniqueConstraint(name = "uk_google_id_entrance", columnNames = {"google_place_id", "entrance"})
+        @UniqueConstraint(name = "uk_address_entrance", columnNames = {"address", "entrance"})
 })
 @Data
 @Builder
@@ -30,9 +30,6 @@ public class Building {
     private String address;
 
     @Column(nullable = false)
-    private String googlePlaceId;
-
-    @Column(nullable = false)
     private String entrance;
 
     @Column(nullable = false)
@@ -49,6 +46,11 @@ public class Building {
     @ToString.Exclude
     @Builder.Default
     private List<Unit> units = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "buildings")
+    @ToString.Exclude
+    @JsonIgnore
+    private List<BuildingDocument> documents = new ArrayList<>();
 
     @Column
     private BigDecimal repairBudget;

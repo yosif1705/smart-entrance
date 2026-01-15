@@ -1,11 +1,15 @@
 package com.smartentrance.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.smartentrance.backend.model.enums.DocumentType;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "building_documents")
@@ -17,9 +21,15 @@ public class BuildingDocument {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "building_id", nullable = false)
-    private Building building;
+    @ManyToMany
+    @JoinTable(
+            name = "building_document_mappings",
+            joinColumns = @JoinColumn(name = "document_id"),
+            inverseJoinColumns = @JoinColumn(name = "building_id")
+    )
+    @ToString.Exclude
+    @JsonIgnore
+    private List<Building> buildings = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "uploaded_by", nullable = false)

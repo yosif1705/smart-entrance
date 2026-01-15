@@ -15,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,15 +33,15 @@ public class BuildingDocumentService {
 
         if (isManager) {
             if (type != null) {
-                docs = documentRepository.findAllByBuildingIdAndTypeOrderByCreatedAtDesc(buildingId, type);
+                docs = documentRepository.findAllByBuildings_IdAndTypeOrderByCreatedAtDesc(buildingId, type);
             } else {
-                docs = documentRepository.findAllByBuildingIdOrderByCreatedAtDesc(buildingId);
+                docs = documentRepository.findAllByBuildings_IdOrderByCreatedAtDesc(buildingId);
             }
         } else {
             if (type != null) {
-                docs = documentRepository.findAllByBuildingIdAndTypeAndIsVisibleToResidentsTrueOrderByCreatedAtDesc(buildingId, type);
+                docs = documentRepository.findAllByBuildings_IdAndTypeAndIsVisibleToResidentsTrueOrderByCreatedAtDesc(buildingId, type);
             } else {
-                docs = documentRepository.findAllByBuildingIdAndIsVisibleToResidentsTrueOrderByCreatedAtDesc(buildingId);
+                docs = documentRepository.findAllByBuildings_IdAndIsVisibleToResidentsTrueOrderByCreatedAtDesc(buildingId);
             }
         }
 
@@ -50,11 +51,32 @@ public class BuildingDocumentService {
     @Transactional
     @PreAuthorize("@buildingSecurity.isManager(#buildingId, principal.user)")
     public void createDocument(Integer buildingId, CreateDocumentRequest req, User uploader) {
-        Building building = buildingRepository.findById(buildingId)
+        Building primaryBuilding = buildingRepository.findById(buildingId)
                 .orElseThrow(() -> new EntityNotFoundException("Building not found"));
 
+        List<Building> targetBuildings = new ArrayList<>();
+        targetBuildings.add(primaryBuilding);
+
+        if (req.sharedBuildingIds() != null && !req.sharedBuildingIds().isEmpty()) {
+
+            for (Integer sharedId : req.sharedBuildingIds()) {
+
+                if (sharedId.equals(buildingId)) continue;
+
+                boolean isManager = buildingRepository.existsByIdAndManagerId(sharedId, uploader.getId());
+
+                if (!isManager) {
+                    throw new org.springframework.security.access.AccessDeniedException(
+                            "You cannot upload documents to building ID " + sharedId + " because you are not its manager."
+                    );
+                }
+
+                buildingRepository.findById(sharedId).ifPresent(targetBuildings::add);
+            }
+        }
+
         BuildingDocument doc = new BuildingDocument();
-        doc.setBuilding(building);
+        doc.setBuildings(targetBuildings);
         doc.setUploadedBy(uploader);
         doc.setTitle(req.title());
         doc.setDescription(req.description());
