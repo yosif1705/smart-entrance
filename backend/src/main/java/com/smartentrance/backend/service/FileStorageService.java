@@ -51,7 +51,6 @@ public class FileStorageService {
             fileExtension = originalFileName.substring(lastDotIndex);
         }
 
-        // 2. Валидация на разширението (whitelist)
         if (!fileExtension.matches("^[.a-zA-Z0-9]*$")) {
             throw new RuntimeException("Security Error: Invalid file extension.");
         }
@@ -68,7 +67,7 @@ public class FileStorageService {
         }
     }
 
-    @PreAuthorize("@buildingSecurity.canAccessFile(#fileName, principal.user)")
+    @PreAuthorize("isAuthenticated()")
     public Resource loadFileAsResource(String fileName) {
         try {
             Path filePath = getSecurePath(fileName);
