@@ -99,7 +99,7 @@ public class FileStorageService {
         }
     }
 
-    @PreAuthorize("@buildingSecurity.canAccessFile(#fileName, principal.user)")
+    @PreAuthorize("isAuthenticated()")
     public Resource loadFileAsResource(String fileName) {
         try {
             Path filePath = getSecurePath(fileName);
