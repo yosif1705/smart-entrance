@@ -28,7 +28,7 @@ class BuildingControllerTest {
         Mockito.doNothing().when(buildingService).transferManagerRole(any(), any());
 
         mockMvc.perform(post("/api/buildings/1/transfer-manager/5")
-                        .with(TestUtils.mockUser(10L, UserRole.USER)))
+                        .with(TestUtils.mockUser(10, UserRole.USER)))
                 .andExpect(status().isOk());
     }
 
@@ -38,7 +38,7 @@ class BuildingControllerTest {
                 .when(buildingService).transferManagerRole(any(), any());
 
         mockMvc.perform(post("/api/buildings/1/transfer-manager/5")
-                        .with(TestUtils.mockUser(11L, UserRole.USER)))
+                        .with(TestUtils.mockUser(11, UserRole.USER)))
                 .andExpect(status().isForbidden());
     }
 }

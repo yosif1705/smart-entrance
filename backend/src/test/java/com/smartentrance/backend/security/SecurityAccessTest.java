@@ -32,7 +32,7 @@ class SecurityAccessTest {
         Mockito.when(buildingSecurity.isManager(any(), any())).thenReturn(false);
 
         mockMvc.perform(get("/api/buildings/1/finance/summary")
-                        .with(TestUtils.mockUser(99L, UserRole.USER)))
+                        .with(TestUtils.mockUser(99, UserRole.USER)))
                 .andExpect(status().isForbidden());
     }
 
@@ -41,9 +41,8 @@ class SecurityAccessTest {
         Mockito.when(buildingSecurity.isManager(any(), any())).thenReturn(true);
         Mockito.when(buildingSecurity.hasAccess(any(), any())).thenReturn(true);
 
-        // ЕТО ГО - 1 ред, който казва "Аз съм Шеф 1"
         mockMvc.perform(get("/api/buildings/1/finance/summary")
-                        .with(TestUtils.mockUser(1L, UserRole.USER)))
+                        .with(TestUtils.mockUser(1, UserRole.USER)))
                 .andExpect(status().isOk());
     }
 }

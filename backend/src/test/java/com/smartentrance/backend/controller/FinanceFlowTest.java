@@ -36,7 +36,7 @@ class FinanceFlowTest {
         helper.addTx(unit, 100.00, TransactionType.FEE);
         helper.addTx(unit, 40.00, TransactionType.PAYMENT);
 
-        Long userId = unit.getResponsibleUser().getId();
+        Integer userId = unit.getResponsibleUser().getId();
 
         mockMvc.perform(get("/api/units/" + unit.getId() + "/balance")
                         .with(TestUtils.mockUser(userId, UserRole.USER)))

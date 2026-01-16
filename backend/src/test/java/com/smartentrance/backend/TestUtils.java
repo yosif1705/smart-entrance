@@ -30,13 +30,13 @@ public class TestUtils {
     @Autowired VotesPollRepository pollRepository;
     @Autowired UserVoteRepository voteRepository;
 
-    public static RequestPostProcessor mockUser(Long id, UserRole role) {
+    public static RequestPostProcessor mockUser(Integer id, UserRole role) {
         return SecurityMockMvcRequestPostProcessors.authentication(
                 createAuth(id, role)
         );
     }
 
-    private static UsernamePasswordAuthenticationToken createAuth(Long id, UserRole role) {
+    private static UsernamePasswordAuthenticationToken createAuth(Integer id, UserRole role) {
         User user = new User();
         user.setId(id);
         user.setEmail("test@example.com");
@@ -70,7 +70,6 @@ public class TestUtils {
         building.setTotalUnits(1);
         building.setEntrance("A");
         building.setManager(user);
-        building.setGooglePlaceId("mock-place-id");
         buildingRepository.save(building);
 
         Unit unit = new Unit();

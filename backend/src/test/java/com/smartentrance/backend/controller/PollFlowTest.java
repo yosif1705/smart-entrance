@@ -29,7 +29,7 @@ class PollFlowTest {
     @Test
     void testVoting_Scenario() throws Exception {
         Unit unit = testUtils.createReadyUnit();
-        Long userId = unit.getResponsibleUser().getId();
+        Integer userId = unit.getResponsibleUser().getId();
 
         VotesPoll poll = testUtils.createPoll(unit.getBuilding());
         testUtils.vote(poll, unit);
